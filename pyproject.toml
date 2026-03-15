@@ -1,0 +1,58 @@
+[project]
+name = "drf-user-report-service"
+version = "0.1.0"
+description = "Django REST Framework demo service for filtering users and exporting HTML reports."
+readme = "README.md"
+license = "MIT"
+authors = [
+    { name = "vladislav1029", email = "vlad1090904@gmail.com" },
+]
+requires-python = ">=3.12"
+dependencies = [
+    "django>=5.2,<5.3",
+    "django-filter>=25.2",
+    "djangorestframework>=3.16.1",
+    "drf-spectacular>=0.29.0",
+    "psycopg[binary]>=3.3.3",
+    "pydantic-settings>=2.13.1",
+]
+
+[dependency-groups]
+dev = [
+    { include-group = "lint" },
+    { include-group = "test" },
+    "ipython>=9.10.0",
+    "pre-commit>=4.5.1",
+]
+lint = [
+    "django-stubs>=5.2.9",
+    "mypy>=1.19.1",
+    "ruff>=0.15.6",
+]
+test = [
+    "coverage>=7.13.4",
+    "pytest>=9.0.2",
+    "pytest-django>=4.12.0",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM"]
+
+[tool.pytest.ini_options]
+DJANGO_SETTINGS_MODULE = "config.settings"
+python_files = ["tests.py", "test_*.py", "*_tests.py"]
+
+[tool.mypy]
+python_version = "3.12"
+plugins = ["mypy_django_plugin.main"]
+
+[[tool.mypy.overrides]]
+module = ["config.env"]
+ignore_errors = true
+
+[tool.django-stubs]
+django_settings_module = "config.settings"
