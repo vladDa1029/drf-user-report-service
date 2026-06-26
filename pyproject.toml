@@ -11,6 +11,7 @@ requires-python = ">=3.12"
 dependencies = [
     "django>=5.2,<5.3",
     "django-filter>=25.2",
+    "django-unfold>=0.99.0",
     "djangorestframework>=3.16.1",
     "drf-spectacular>=0.29.0",
     "psycopg[binary]>=3.3.3",
@@ -26,18 +27,21 @@ dev = [
 ]
 lint = [
     "django-stubs>=5.2.9",
+    "djangorestframework-stubs>=3.16.9",
     "mypy>=1.19.1",
     "ruff>=0.15.6",
 ]
 test = [
     "coverage>=7.13.4",
     "pytest>=9.0.2",
+    "pytest-cov>=7.0.0",
     "pytest-django>=4.12.0",
 ]
 
 [tool.ruff]
 line-length = 100
 target-version = "py312"
+extend-exclude = ["*/migrations/*"]
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "UP", "B", "SIM"]
@@ -45,14 +49,52 @@ select = ["E", "F", "I", "UP", "B", "SIM"]
 [tool.pytest.ini_options]
 DJANGO_SETTINGS_MODULE = "config.settings"
 python_files = ["tests.py", "test_*.py", "*_tests.py"]
+addopts = "--cov --cov-report=term-missing --cov-report=html"
 
 [tool.mypy]
 python_version = "3.12"
-plugins = ["mypy_django_plugin.main"]
+plugins = [
+    "mypy_django_plugin.main",
+    "mypy_drf_plugin.main",
+]
 
 [[tool.mypy.overrides]]
 module = ["config.env"]
 ignore_errors = true
 
+[[tool.mypy.overrides]]
+module = ["unfold.*"]
+ignore_missing_imports = true
+
 [tool.django-stubs]
 django_settings_module = "config.settings"
+
+[tool.coverage.run]
+branch = true
+source = ["."]
+omit = [
+    "manage.py",
+    "config/asgi.py",
+    "config/wsgi.py",
+    "*/migrations/*",
+    "*/tests/*",
+    "*/test_*.py",
+    "*/conftest.py",
+]
+
+[tool.coverage.report]
+show_missing = true
+skip_covered = false
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "if TYPE_CHECKING:",
+    "if typing.TYPE_CHECKING:",
+    "raise NotImplementedError",
+    "pass",
+    "if __name__ == .__main__.:",
+]
+
+[tool.coverage.html]
+directory = "htmlcov"
+title = "drf-user-report-service coverage"
