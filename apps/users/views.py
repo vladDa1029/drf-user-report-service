@@ -1,6 +1,7 @@
+from django_filters import rest_framework as filters
 from rest_framework import permissions, viewsets
-from rest_framework.permissions import IsAdminUser
 
+from .filters import UserFilter
 from .models import User
 from .serializers import UserSerializer
 
@@ -10,6 +11,8 @@ class UserViewSet(viewsets.ReadOnlyModelViewSet):
     API endpoint that allows users to be viewed.
     """
 
-    queryset = User.objects.all().order_by("-created_at")
+    queryset = User.objects.all()
     serializer_class = UserSerializer
-    permission_classes: list[type[IsAdminUser]] = [permissions.IsAdminUser]
+    permission_classes = [permissions.IsAdminUser]
+    filter_backends = (filters.DjangoFilterBackend,)
+    filterset_class = UserFilter

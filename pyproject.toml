@@ -33,6 +33,7 @@ lint = [
 ]
 test = [
     "coverage>=7.13.4",
+    "model-bakery>=1.24.0",
     "pytest>=9.0.2",
     "pytest-cov>=7.0.0",
     "pytest-django>=4.12.0",
@@ -59,12 +60,10 @@ plugins = [
 ]
 
 [[tool.mypy.overrides]]
-module = ["config.env"]
 ignore_errors = true
-
-[[tool.mypy.overrides]]
-module = ["unfold.*"]
+module = ["config.env","django_filters.*", "unfold.*"]
 ignore_missing_imports = true
+
 
 [tool.django-stubs]
 django_settings_module = "config.settings"
